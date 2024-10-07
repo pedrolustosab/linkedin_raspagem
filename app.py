@@ -1,11 +1,6 @@
 import streamlit as st
 from linkedin_api import Linkedin
-from dotenv import load_dotenv
-import os
 import io
-
-# Load environment variables (if any)
-load_dotenv()
 
 # Helper function to format dates
 def format_date(date):
@@ -15,59 +10,47 @@ def format_date(date):
 def create_resume(profile_data, contact_info):
     # Personal Details
     full_name = f"{profile_data.get('firstName', '')} {profile_data.get('lastName', '')}"
-    headline = profile_data.get('headline', '')
-    location = profile_data.get('locationName', 'Unknown')
+    headline = profile_data.get('headline', 'No headline available')
+    location = profile_data.get('locationName', 'Unknown location')
     summary = profile_data.get('summary', 'No summary available')
 
     # Contact Information
     email = contact_info.get('email_address', 'Not provided')
-    github = next((site.get('url') for site in contact_info.get('websites', []) if site['label'] == 'PORTFOLIO'), 'Not provided')
-    portfolio = contact_info.get('websites', [])
-    
-    # Experience
+    github = next((site['url'] for site in contact_info.get('websites', []) if site.get('label') == 'PORTFOLIO'), 'Not provided')
+
+    # Experience Section
     experience_entries = profile_data.get('experience', [])
-    experience_str = ""
-    for exp in experience_entries:
-        company = exp.get('companyName', 'N/A')
-        title = exp.get('title', 'N/A')
-        location = exp.get('locationName', 'N/A')
-        start_date = format_date(exp.get('timePeriod', {}).get('startDate', {}))
-        end_date = format_date(exp.get('timePeriod', {}).get('endDate', {})) or 'Present'
-        description = exp.get('description', 'No description available')
-        experience_str += f"{title} at {company} ({start_date} - {end_date})\n"
-        experience_str += f"Location: {location}\n"
-        experience_str += f"Description: {description}\n\n"
+    experience_str = "\n".join([
+        f"{exp.get('title', 'N/A')} at {exp.get('companyName', 'N/A')} ({format_date(exp.get('timePeriod', {}).get('startDate'))} - {format_date(exp.get('timePeriod', {}).get('endDate')) or 'Present'})\n"
+        f"Location: {exp.get('locationName', 'N/A')}\n"
+        f"Description: {exp.get('description', 'No description available')}\n"
+        for exp in experience_entries
+    ])
 
-    # Education
+    # Education Section
     education_entries = profile_data.get('education', [])
-    education_str = ""
-    for edu in education_entries:
-        school = edu.get('schoolName', 'Unknown School')
-        field_of_study = edu.get('fieldOfStudy', 'N/A')
-        degree = edu.get('degreeName', '')
-        start_date = format_date(edu.get('timePeriod', {}).get('startDate', {}))
-        end_date = format_date(edu.get('timePeriod', {}).get('endDate', {}))
-        education_str += f"{school} - {degree} ({start_date} - {end_date})\n"
-        education_str += f"Field of Study: {field_of_study}\n\n"
+    education_str = "\n".join([
+        f"{edu.get('schoolName', 'Unknown School')} - {edu.get('degreeName', '')} ({format_date(edu.get('timePeriod', {}).get('startDate'))} - {format_date(edu.get('timePeriod', {}).get('endDate'))})\n"
+        f"Field of Study: {edu.get('fieldOfStudy', 'N/A')}\n"
+        for edu in education_entries
+    ])
 
-    # Skills
+    # Skills Section
     skills = profile_data.get('skills', [])
     skills_str = ", ".join([skill.get('name') for skill in skills])
 
-    # Certifications
+    # Certifications Section
     certifications = profile_data.get('certifications', [])
-    cert_str = ""
-    for cert in certifications:
-        cert_name = cert.get('name', 'Unknown Certification')
-        authority = cert.get('authority', 'Unknown Authority')
-        start_date = format_date(cert.get('timePeriod', {}).get('startDate', {}))
-        cert_str += f"{cert_name} by {authority} ({start_date})\n"
+    cert_str = "\n".join([
+        f"{cert.get('name', 'Unknown Certification')} by {cert.get('authority', 'Unknown Authority')} ({format_date(cert.get('timePeriod', {}).get('startDate'))})"
+        for cert in certifications
+    ])
 
-    # Languages
+    # Languages Section
     languages = profile_data.get('languages', [])
     languages_str = ", ".join([f"{lang.get('name')} ({lang.get('proficiency')})" for lang in languages])
 
-    # Format resume
+    # Final Resume Format
     resume = f"""
     {full_name}
     {headline}
@@ -76,7 +59,6 @@ def create_resume(profile_data, contact_info):
     Contact Information:
     Email: {email}
     GitHub: {github}
-    Portfolio: {portfolio}
 
     Summary:
     {summary}
@@ -114,13 +96,15 @@ profile_target = st.text_input("Target LinkedIn Profile", placeholder="Enter the
 # Add instructions and generate button
 st.info("Enter your LinkedIn credentials in the sidebar and the target LinkedIn profile username to generate a resume.")
 
+# Generate resume when the button is clicked
 if st.button('Generate Resume'):
     if linkedin_username and linkedin_password and profile_target:
         try:
-            # Authenticate and fetch profile
-            api = Linkedin(linkedin_username, linkedin_password)
-            profile_data = api.get_profile(profile_target)
-            contact_info = api.get_profile_contact_info(profile_target)
+            with st.spinner("Fetching LinkedIn profile..."):
+                # Authenticate and fetch profile
+                api = Linkedin(linkedin_username, linkedin_password)
+                profile_data = api.get_profile(profile_target)
+                contact_info = api.get_profile_contact_info(profile_target)
 
             # Create the resume
             resume = create_resume(profile_data, contact_info)
@@ -129,12 +113,14 @@ if st.button('Generate Resume'):
             st.text_area("Generated Resume", resume, height=400)
 
             # Create a buffer to hold the resume data
-            resume_buffer = io.StringIO(resume)
-            
+            with io.StringIO() as resume_buffer:
+                resume_buffer.write(resume)
+                resume_data = resume_buffer.getvalue()
+
             # Create a download button for the resume
             st.download_button(
                 label="Download Resume as TXT",
-                data=resume_buffer.getvalue(),
+                data=resume_data,
                 file_name=f"{profile_target}_resume.txt",
                 mime="text/plain"
             )
