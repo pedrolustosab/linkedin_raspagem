@@ -1,0 +1,61 @@
+
+    Pedro Lustosa
+    Analista de Dados - Power BI | SQL | Python | Excel
+    Fortaleza, Ceará, Brasil
+
+    Contact Information:
+    Email: None
+    GitHub: https://github.com/pedrolustosab
+    Portfolio: [{'url': 'https://github.com/pedrolustosab', 'label': 'PORTFOLIO'}, {'url': 'https://www.novypro.com/profile_projects/pedrolustosa', 'label': 'PORTFOLIO'}]
+
+    Summary:
+    Como Analista de Dados apaixonado, minha jornada é guiada pela excelência e uma curiosidade insaciável. Vejo além dos números; eu os transformo em narrativas que revelam insights e direcionam estratégias. Meu propósito é simplificar o complexo, criando soluções inovadoras que não só agregam valor, mas também fascinam nossos clientes. Armado com expertise em Power BI, SQL e Python, estou sempre um passo à frente, buscando inovação e aprimoramento contínuo dos processos para superar as expectativas e entregar resultados excepcionais.
+
+Power BI | SQL | Python | Autodidata
+
+    Experience:
+    Analista de BI at Grupo Portfolio (3/2022 - /)
+Location: Fortaleza, Ceará, Brasil
+Description: Power BI | Figma
+
+Data Analyst Jr at plusoft DTM - Marketing de Relacionamento (10/2021 - 3/2022)
+Location: Remoto
+Description: SQL | Excel | Power BI | Tableau | Python
+
+Business Intelligence Analyst at IZI App (1/2021 - 9/2021)
+Location: Fortaleza, Ceará, Brasil
+Description: SQL | Painéis (Ferramenta própria) | Python
+
+
+
+    Education:
+    Ada Tech -  (10/2023 - 3/2024)
+Field of Study: Dados
+
+Data Science Academy - Python Fundamentos para Análise de Dados (2/2021 - 3/2021)
+Field of Study: N/A
+
+Data Science Academy - Microsoft Power BI Para Data Science versão 2.0 (11/2020 - 2/2021)
+Field of Study: N/A
+
+
+
+    Skills:
+    Git, Docker, Computação em nuvem, Web Scraping
+
+    Certifications:
+    Microsoft Power BI Para Data Science, Versão 2.0 by Data Science Academy (2/2021)
+Python Fundamentos para Análise de Dados by Data Science Academy (3/2021)
+SQL Completo by Softblue Cursos Online (5/2020)
+Business Intelligence (BI) by FIAP (4/2021)
+Data Analysis Real world use-case-Hands on Python by Udemy (7/2021)
+Machine Learning e Data Science com Phyton by Saint Paul Escola de Negócios (10/2021)
+Microsoft Power BI DAX from Scratch by Udemy (11/2021)
+Master in Microsoft Power BI Desktop and Service by Udemy (11/2021)
+ DAX Calculation Groups by Udemy (3/2022)
+Artificial Intelligence for Business by Grupo Portfolio (5/2022)
+
+
+    Languages:
+    Inglês (FULL_PROFESSIONAL), Português (NATIVE_OR_BILINGUAL)
+    
