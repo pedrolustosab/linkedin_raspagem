@@ -99,39 +99,47 @@ def create_resume(profile_data, contact_info):
     
     return resume
 
-# Streamlit app
-st.title('LinkedIn Profile to Resume Generator')
+# Streamlit app title
+st.title('📄 LinkedIn Profile to Resume Generator')
 
-# Input form
-with st.form(key='linkedin_form'):
-    linkedin_username = st.text_input("LinkedIn Username", placeholder="Enter your LinkedIn username")
-    linkedin_password = st.text_input("LinkedIn Password", type="password", placeholder="Enter your LinkedIn password")
-    profile_target = st.text_input("Profile Target", placeholder="Enter the LinkedIn profile target username")
-    submit_button = st.form_submit_button(label='Generate Resume')
+# Sidebar for LinkedIn login credentials
+st.sidebar.header("🔑 LinkedIn Login")
+linkedin_username = st.sidebar.text_input("Username", placeholder="Enter your LinkedIn username")
+linkedin_password = st.sidebar.text_input("Password", type="password", placeholder="Enter your LinkedIn password")
 
-if submit_button:
-    try:
-        # Authenticate and fetch profile
-        api = Linkedin(linkedin_username, linkedin_password)
-        profile_data = api.get_profile(profile_target)
-        contact_info = api.get_profile_contact_info(profile_target)
+# Input field for target LinkedIn profile in the main content area
+st.subheader("Generate a Resume")
+profile_target = st.text_input("Target LinkedIn Profile", placeholder="Enter the LinkedIn profile target username")
 
-        # Create the resume
-        resume = create_resume(profile_data, contact_info)
-        
-        # Display the resume in a text area
-        st.text_area("Generated Resume", resume, height=400)
+# Add instructions and generate button
+st.info("Enter your LinkedIn credentials in the sidebar and the target LinkedIn profile username to generate a resume.")
 
-        # Create a buffer to hold the resume data
-        resume_buffer = io.StringIO(resume)
-        
-        # Create a download button
-        st.download_button(
-            label="Download Resume as TXT",
-            data=resume_buffer.getvalue(),
-            file_name=f"{profile_target}_resume.txt",
-            mime="text/plain"
-        )
+if st.button('Generate Resume'):
+    if linkedin_username and linkedin_password and profile_target:
+        try:
+            # Authenticate and fetch profile
+            api = Linkedin(linkedin_username, linkedin_password)
+            profile_data = api.get_profile(profile_target)
+            contact_info = api.get_profile_contact_info(profile_target)
 
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
+            # Create the resume
+            resume = create_resume(profile_data, contact_info)
+            
+            # Display the resume in a text area
+            st.text_area("Generated Resume", resume, height=400)
+
+            # Create a buffer to hold the resume data
+            resume_buffer = io.StringIO(resume)
+            
+            # Create a download button for the resume
+            st.download_button(
+                label="Download Resume as TXT",
+                data=resume_buffer.getvalue(),
+                file_name=f"{profile_target}_resume.txt",
+                mime="text/plain"
+            )
+
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
+    else:
+        st.warning("Please enter LinkedIn credentials and the target profile username.")
